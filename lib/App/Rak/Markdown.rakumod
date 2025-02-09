@@ -78,7 +78,7 @@ class App::Rak::Markdown:ver<0.0.1>:auth<zef:lizmat> {
       str :$depth   = "###",
           :$tableizer,
     ) {
-        my str @lines;
+        my Str @lines;  # must be Str until 2025.02
         my str $last-header      = "";
         my str $break            = $!break;
         my int $expecting-header = $headers;
