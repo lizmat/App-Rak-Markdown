@@ -1,0 +1,4 @@
+.precomp/
+/App-Rak-Markdown-*
+/releases/
+*.rakucov

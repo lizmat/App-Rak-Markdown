@@ -1,0 +1,29 @@
+{
+  "auth": "zef:lizmat",
+  "authors": [
+    "Elizabeth Mattijsen"
+  ],
+  "build-depends": [
+  ],
+  "depends": [
+    "App::Rak:ver<0.3.17+>:auth<zef:lizmat>"
+  ],
+  "description": "Convert App::Rak output to Markdown",
+  "license": "Artistic-2.0",
+  "name": "App::Rak::Markdown",
+  "perl": "6.d",
+  "provides": {
+    "App::Rak::Markdown": "lib/App/Rak/Markdown.rakumod"
+  },
+  "resources": [
+  ],
+  "source-url": "https://github.com/lizmat/App-Rak-Markdown.git",
+  "tags": [
+    "RAK",
+    "MARKDOWN",
+    "SEARCH"
+  ],
+  "test-depends": [
+  ],
+  "version": "0.0.1"
+}

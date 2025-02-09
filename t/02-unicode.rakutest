@@ -1,0 +1,61 @@
+use Test;
+use App::Rak::Markdown;
+
+plan 2;
+
+my $input = q:to/INPUT/;
+1F3E9 [1mLOVE[22m HOTEL 🏩
+1F48C [1mLOVE[22m LETTER 💌
+1F91F I [1mLOVE[22m YOU HAND SIGN 🤟
+INPUT
+
+my $no-headers = q:to/NOHEADERS/;
+1F3E9 <b>LOVE</b> HOTEL 🏩\
+1F48C <b>LOVE</b> LETTER 💌\
+1F91F I <b>LOVE</b> YOU HAND SIGN 🤟
+NOHEADERS
+
+my $as-table = q:to/ASTABLE/;
+hex | name | graph
+:- | :-: | :-:
+1F3E9 | <b>LOVE</b> HOTEL | 🏩
+1F48C | <b>LOVE</b> LETTER | 💌
+1F91F | I <b>LOVE</b> YOU HAND SIGN | 🤟
+ASTABLE
+
+my sub unicode-ok($description, $output, *%_) is test-assertion {
+    my int $items;
+    my int $files;
+    my int $heads;
+
+    subtest $description => {
+        plan 10;
+
+        my $rmd := App::Rak::Markdown.new;
+        is $rmd.markdown(
+          $input.lines, $items, $files, $heads, :!headers, |%_
+        ), $output, 'does the output match';
+
+        is $items, 3, 'is number of items ok';
+        is $files, 0, 'is number of files ok';
+        is $heads, 0, 'is number of headers ok';
+
+        $heads = $files = $items = 0;
+        is $rmd.run(<--unicode §love --highlight>,
+          my str @err, my str @out, $items, $files, $heads, :!headers, |%_
+        ), $output, "does the 'rak' output match";
+
+        is @err.elems, 0, 'nothing returned in @err';
+        is @out.elems, 0, 'nothing returned in @out';
+
+        is $items, 3, 'is number of items ok';
+        is $files, 0, 'is number of files ok';
+        is $heads, 0, 'is number of headers ok';
+    }
+}
+
+unicode-ok 'small result without headers', $no-headers;
+
+unicode-ok 'small result with tableizer', $as-table, :tableizer<unicode>;
+
+# vim: expandtab shiftwidth=4

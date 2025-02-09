@@ -1,0 +1,9 @@
+use Test;
+use App::Rak::Markdown;
+
+plan 1;
+
+my $rmd := App::Rak::Markdown.new;
+isa-ok $rmd, App::Rak::Markdown;
+
+# vim: expandtab shiftwidth=4

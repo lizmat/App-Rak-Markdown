@@ -1,0 +1,87 @@
+use Test;
+use App::Rak::Markdown;
+
+plan 2;
+
+my $test-files := $*PROGRAM.sibling("test-files");
+$test-files.spurt(
+  dir($*PROGRAM.parent, :test(*.ends-with('.rakutest')))
+    .map(*.absolute).sort.join("\n")
+);
+END $test-files.unlink;
+
+my $input = q:to/INPUT/;
+t/01-basic.rakutest
+1:[1muse Test[22m;
+***
+t/02-unicode.rakutest
+1:[1muse Test[22m;
+***
+t/03-depth.rakutest
+1:[1muse Test[22m;
+INPUT
+
+my $no-headers = q:to/NO-HEADERS/;
+t/01-basic.rakutest\
+1:<b>use Test</b>;
+
+t/02-unicode.rakutest\
+1:<b>use Test</b>;
+
+t/03-depth.rakutest\
+1:<b>use Test</b>;
+NO-HEADERS
+
+my $with-headers = q:to/WITH-HEADERS/;
+### t/01-basic.rakutest
+1:<b>use Test</b>;
+
+___
+### t/02-unicode.rakutest
+1:<b>use Test</b>;
+
+___
+### t/03-depth.rakutest
+1:<b>use Test</b>;
+WITH-HEADERS
+
+my sub query-ok($description, $output, $eh, $ef, $ei, *%_) is test-assertion {
+    my int $items;
+    my int $files;
+    my int $heads;
+
+    subtest $description => {
+        plan 10;
+
+        my $rmd := App::Rak::Markdown.new;
+
+        is $rmd.markdown($input.lines, $items, $files, $heads, |%_),
+          $output, 'does the output match';
+
+        is $items, $ei, 'is number of items ok';
+        is $files, $ef, 'is number of files ok';
+        is $heads, $eh, 'is number of headers ok';
+
+        $heads = $files = $items = 0;
+        my @args = <--human --break=***>;
+        @args.push: '^use Test';
+        @args.push: "--files-from=$test-files";
+
+        is $rmd.run(
+          @args, my str @err, my str @out, $items, $files, $heads, |%_
+        ), $output, "does the 'rak' output match";
+
+        is @out.elems, 0, 'nothing returned in @out';
+        is @err.elems, 0, 'nothing returned in @err';
+
+        is $items, $ei, 'is number of items ok';
+        is $files, $ef, 'is number of files ok';
+        is $heads, $eh, 'is number of headers ok';
+    }
+}
+
+query-ok 'result without headers', $no-headers, 0, 0, 6, :!headers;
+
+query-ok 'result with headers', $with-headers, 3, 3, 3;
+
+# vim: expandtab shiftwidth=4

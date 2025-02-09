@@ -1,0 +1,170 @@
+=begin pod
+
+=head1 NAME
+
+App::Rak::Markdown - convert App::Rak output to Markdown
+
+=head1 SYNOPSIS
+
+=begin code :lang<raku>
+
+use App::Rak::Markdown;
+
+my $rmd = App::Rak::Markdown.new;
+
+spurt "result.md", $rmd.markdown(@output);
+
+spurt "result.md", $rmd.run(<--unicode §love>, :tableize<unicode>);
+
+=end code
+
+=head1 DESCRIPTION
+
+The C<App::Rak::Markdown> distribution provides logic to convert the
+output of L<C<App::Rak>|https://raku.land/zef:lizmat/App::Rak> to
+Markdown format.
+
+This can either be done from captured output, or from a set of arguments
+to be sent to the C<rak> command line script.
+
+=head1 METHODS
+
+=head2 new
+
+=begin code :lang<raku>
+
+my $rmd = App::Rak::Markdown.new(
+  break => '§§§',  # default: '***'
+);
+
+=end code
+
+The C<new> method takes 1 named argument:
+
+=head3 :break
+
+The string to be used / checked for between grouped items in C<rak>'s
+output (as documented with the C<--break> argument).  Defaults to
+C<"***">.
+
+=head2 markdown
+
+=begin code :lang<raku>
+
+say $rmd.markdown(@output);
+
+my $markdown = $rmd.markdown(
+  @output,
+  my $items,    # store # of items seen, default: don't bother
+  my $files,    # store # of files seen, default: don't bother
+  my $heads,    # store # of headers seen, default: don't bother
+  :headers(0),  # how many levels of headers, default: 1
+  :depth<##>,   # markdown string of top headers, default: "###"
+  :&tableizer,  # logic to create tables, default: none
+)
+
+=end code
+
+The C<markdown> method takes a number of arguments, and returns a string
+formatted according to Markdown rules.
+
+It takes at least one positional argument: a list of lines of C<rak>
+output.
+
+It also takes the following optional positional arguments:
+=item $items - where to store the # of items seen, default: don't bother
+=item $files - where to store the # of files seen, default: don't bother
+=item $heads - where to store the # of headers seen, default: don't bother
+
+And takes the following optional named arguments:
+=item :headers - the number of header levels, defaults to 1
+=item :depth - the markdown string for the top header, default "###"
+=item :tableizer - logic to create tables, default: none.
+
+=head3 Creating tables
+
+If the output from C<rak> is fit to create markdown tables for (e.g.
+the C<--unicode> option, the C<:tableizer> named argument can be used
+to indicate a C<Callable> that will be called to manage creating
+markdown tables.
+
+This C<Callable> is expected to be called without any arguments: in that
+case it should return B<two> lists: the first with the names of the
+columns, and the second with formatting info for each column.  The
+formatting info can be specified with the following words:
+=item left - align text in column to the left
+=item center - center text in colum
+=item right - align text in column to the right
+
+Any other word will cause no specific aligning to be done. 
+
+If called B<with> an argument, it should return a list with the text
+for each column.
+
+Some standard rak options have a dedicated tableizer, which can be
+invoked by name.  They currently are:
+=item unicode - tableize for --unicode output
+
+=head2 run
+
+=begin code :lang<raku>
+
+say "result.md", $rmd.run(<--unicode §love>, :tableize<unicode>);
+# hex | name | graph
+# :- | :-: | :-:
+# 1F3E9 | <b>LOVE</b> HOTEL | 🏩
+# 1F48C | <b>LOVE</b> LETTER | 💌
+# 1F91F | I <b>LOVE</b> YOU HAND SIGN | 🤟
+
+=end code
+
+The C<run> method is effectively a wrapper around the C<markdown> method,
+taking some extra arguments instead of the initial positional argument of
+C<markdown>.
+
+It either returns the Markdown string, or C<Nil> if something went wrong,
+or if not enough lines were received from C<rak> to make parsing to
+Markdown worthwhile.
+
+The first positional argument is required: it should contain the arguments
+to be sent to C<rak>.
+
+The second optional positional argument specifies an array in which any
+error output should be stored in case something went wrong.  This should
+be checked if C<Nil> was returned.  Defaults to "don't bother".
+
+The third optional positional argument specifies an array in which any
+standard output should be stored in case not enough lines of output were
+obtained (see C<:min-lines> named argument).  This should be checked if
+C<Nil> was returned.  Defaults to "don't bother".
+
+All other arguments that C<markdown> can receive, can also be specified
+here:
+=item $items - where to store the # of items seen, default: don't bother
+=item $files - where to store the # of files seen, default: don't bother
+=item $heads - where to store the # of headers seen, default: don't bother
+=item :headers - the number of header levels, defaults to 1
+=item :depth - the markdown string for the top header, default "###"
+=item :tableizer - logic to create tables, default: none.
+
+Additional named arguments that can be specified with the C<run> method:
+=item :min-lines - the minumum number of lines in output, default: 0
+
+=head1 AUTHOR
+
+Elizabeth Mattijsen <liz@raku.rocks>
+
+Source can be located at: https://github.com/lizmat/App-Rak-Markdown .
+Comments and Pull Requests are welcome.
+
+If you like this module, or what I'm doing more generally, committing to a
+L<small sponsorship|https://github.com/sponsors/lizmat/>  would mean a great
+deal to me!
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2025 Elizabeth Mattijsen
+
+This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
+
+=end pod
