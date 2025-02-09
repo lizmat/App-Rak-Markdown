@@ -3,6 +3,9 @@ use App::Rak::Markdown;
 
 plan 2;
 
+# Make sure no interference from user config settings
+%*ENV<RAK_CONFIG> := '';
+
 my $input = q:to/INPUT/;
 1F3E9 [1mLOVE[22m HOTEL 🏩
 1F48C [1mLOVE[22m LETTER 💌

@@ -3,6 +3,9 @@ use App::Rak::Markdown;
 
 plan 2;
 
+# Make sure no interference from user config settings
+%*ENV<RAK_CONFIG> := '';
+
 my $test-files := $*PROGRAM.sibling("test-files");
 $test-files.spurt(
   dir($*PROGRAM.parent, :test(*.ends-with('.rakutest')))
