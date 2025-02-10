@@ -52,13 +52,15 @@ my sub query-ok($description, $output, $eh, $ef, $ei, *%_) is test-assertion {
     my int $items;
     my int $files;
     my int $heads;
+    my str @out;
+    my str @err;
 
     subtest $description => {
         plan 10;
 
         my $rmd := App::Rak::Markdown.new;
 
-        is $rmd.markdown($input.lines, $items, $files, $heads, |%_),
+        is $rmd.markdown($input.lines, :$items, :$files, :$heads, |%_),
           $output, 'does the output match';
 
         is $items, $ei, 'is number of items ok';
@@ -72,7 +74,7 @@ my sub query-ok($description, $output, $eh, $ef, $ei, *%_) is test-assertion {
 
         todo("CI tests produces different results");
         is $rmd.run(
-          @args, my str @err, my str @out, $items, $files, $heads, |%_
+          @args, :@out, :@err, :$items, :$files, :$heads, |%_
         ), $output, "does the 'rak' output match";
 
         is @out.elems, 0, 'nothing returned in @out';

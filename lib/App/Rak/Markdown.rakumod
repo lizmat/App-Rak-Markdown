@@ -24,56 +24,71 @@ my sub tableizer($tableizer) {
     $tableizer
       ?? $tableizer ~~ Callable
         ?? $tableizer
-        !! $tableizer eq 'unicode'
+        !! $tableizer eq <unicode frequencies unique>.any
           ?? ::("&$tableizer")
           !! die "Unknown tableizer: $tableizer"
       !! Nil
 }
 
-my multi sub unicode() { <hex name graph>, <left center center> }
+# Tableizer for --unicode
+my multi sub unicode() { <hex name graph>, <left left center> }
 my multi sub unicode($_) {
     my str @words = .words;
     (@words.head, @words[1..*-2].join(" "), @words.tail)
 }
 
+# Tableizer for --frequencies
+my multi sub frequencies()   { <freq value>, <right left> }
+my multi sub frequencies($_) { .split(":", 2)         }
+
+# Tableizer for --unique
+my multi sub unique()   { <value>, <left> }
+my multi sub unique($_) { ($_,)           }
+
 class App::Rak::Markdown:ver<0.0.1>:auth<zef:lizmat> {
     has str $.break = "***";
 
     method run(App::Rak::Markdown:D:
-      @args,
-      \err = my str @,
-      \out = my str @,
-      \items = my int $,
-      \files = my int $,
-      \heads = my int $,
+           @args,
+          :@err = my str @,
+          :@out = my str @,
+          :$items is raw = my int $,
+          :$files is raw = my int $,
+          :$heads is raw = my int $,
       int :$min-lines,
+          :$sort
     ) {
         my $proc := run 'rak', @args, "--break=$!break", :out, :err;
 
         # Alas, something went awry
         if $proc.exitcode {
-            err = $proc.err.lines;
+            @err = $proc.err.lines;
             return Nil;
         }
 
         # Not enough lines to process
-        my @out = $proc.out.lines;
-        if @out < $min-lines {
-            out = @out;
+        my str @output = $proc.out.lines;
+        if @output < $min-lines {
+            @out = @output;
             Nil
         }
 
         # Enough to process, go do it!
         else {
-            self.markdown(@out, items, files, heads, |%_)
+            if $sort {
+                @output = $sort ~~ Bool
+                  ?? @output.sort
+                  !! @output.sort($sort);
+            }
+            self.markdown(@output, :$items, :$files, :$heads, |%_)
         }
     }
 
     method markdown(App::Rak::Markdown:D:
-      @raw,
-      \items = my int $,
-      \files = my int $,
-      \heads = my int $,
+           @raw,
+          :$items is raw = my int $,
+          :$files is raw = my int $,
+          :$heads is raw = my int $,
       Int :$headers = 1,
       str :$depth   = "###",
           :$tableizer,
@@ -95,13 +110,13 @@ class App::Rak::Markdown:ver<0.0.1>:auth<zef:lizmat> {
                 my @parts  = $line.split("/",$expecting-header);
                 my $header = @parts.shift;
                 if $header ne $last-header {
-                    ++heads;
+                    ++$heads;
                     @lines.push("___") if $last-header;
                     $last-header = $header;
                     @lines.push(escape "$depth $header");
                 }
 
-                ++files;
+                ++$files;
                 my str $deeper = $depth;
                 for @parts {
                     $deeper ~= "#";
@@ -115,7 +130,7 @@ class App::Rak::Markdown:ver<0.0.1>:auth<zef:lizmat> {
                 $expecting-header = $headers;
             }
             elsif $line {
-                ++items;
+                ++$items;
                 @lines.push(escape &tableize
                   ?? tableize($line).join(" | ")
                   !! "$line\\"

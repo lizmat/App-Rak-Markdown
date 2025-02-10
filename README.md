@@ -51,28 +51,26 @@ say $rmd.markdown(@output);
 
 my $markdown = $rmd.markdown(
   @output,
-  my $items,    # store # of items seen, default: don't bother
-  my $files,    # store # of files seen, default: don't bother
-  my $heads,    # store # of headers seen, default: don't bother
+  :$items,    # store # of items seen, default: don't bother
+  :$files,    # store # of files seen, default: don't bother
+  :$heads,    # store # of headers seen, default: don't bother
   :headers(0),  # how many levels of headers, default: 1
   :depth<##>,   # markdown string of top headers, default: "###"
   :&tableizer,  # logic to create tables, default: none
 )
 ```
 
-The `markdown` method takes a number of arguments, and returns a string formatted according to Markdown rules.
+The `markdown` method takes one positional argument and an optional number of named arguments, and returns a string formatted according to Markdown rules.
 
-It takes at least one positional argument: a list of lines of `rak` output.
+It takes one positional argument: a list of lines of `rak` output.
 
-It also takes the following optional positional arguments:
+It also takes the following optional named arguments:
 
-  * $items - where to store the # of items seen, default: don't bother
+  * :$items - where to store the # of items seen, default: don't bother
 
-  * $files - where to store the # of files seen, default: don't bother
+  * :$files - where to store the # of files seen, default: don't bother
 
-  * $heads - where to store the # of headers seen, default: don't bother
-
-And takes the following optional named arguments:
+  * :$heads - where to store the # of headers seen, default: don't bother
 
   * :headers - the number of header levels, defaults to 1
 
@@ -100,45 +98,52 @@ Some standard rak options have a dedicated tableizer, which can be invoked by na
 
   * unicode - tableize for --unicode output
 
+  * frequencies - tableize for --frequencies output
+
+  * unique - tableize for --unique output
+
 run
 ---
 
 ```raku
 say "result.md", $rmd.run(<--unicode §love>, :tableize<unicode>);
-# hex | name | graph
-# :- | :-: | :-:
-# 1F3E9 | <b>LOVE</b> HOTEL | 🏩
-# 1F48C | <b>LOVE</b> LETTER | 💌
-# 1F91F | I <b>LOVE</b> YOU HAND SIGN | 🤟
 ```
 
-The `run` method is effectively a wrapper around the `markdown` method, taking some extra arguments instead of the initial positional argument of `markdown`.
+    hex | name | graph
+    :- | :-: | :-:
+    1F3E9 | <b>LOVE</b> HOTEL | 🏩
+    1F48C | <b>LOVE</b> LETTER | 💌
+    1F91F | I <b>LOVE</b> YOU HAND SIGN | 🤟
+
+The `run` method is effectively a wrapper around the `markdown` method.
 
 It either returns the Markdown string, or `Nil` if something went wrong, or if not enough lines were received from `rak` to make parsing to Markdown worthwhile.
 
-The first positional argument is required: it should contain the arguments to be sent to `rak`.
+The positional argument is required: it should contain the arguments to be sent to `rak`.
 
-The second optional positional argument specifies an array in which any error output should be stored in case something went wrong. This should be checked if `Nil` was returned. Defaults to "don't bother".
+These named arguments can be specified with the `run` method:
 
-The third optional positional argument specifies an array in which any standard output should be stored in case not enough lines of output were obtained (see `:min-lines` named argument). This should be checked if `Nil` was returned. Defaults to "don't bother".
+  * :@out - where to store output of rak, default: don't bother
 
-All other arguments that `markdown` can receive, can also be specified here:
+  * :@err - where to store error output of rak, default: don't bother
 
-  * $items - where to store the # of items seen, default: don't bother
+  * :min-lines - the minumum number of lines in output, default: 0
 
-  * $files - where to store the # of files seen, default: don't bother
+Note that the `:@out` named argument only makes sense if the `:min-lines` argument also has been specified with a value greater than 0.
 
-  * $heads - where to store the # of headers seen, default: don't bother
+All other named arguments that `markdown` can receive, can also be specified here and will be passed on to the `markdown` method:
+
+  * :$items - where to store the # of items seen, default: don't bother
+
+  * :$files - where to store the # of files seen, default: don't bother
+
+  * :$heads - where to store the # of headers seen, default: don't bother
 
   * :headers - the number of header levels, defaults to 1
 
   * :depth - the markdown string for the top header, default "###"
 
   * :tableizer - logic to create tables, default: none.
-
-Additional named arguments that can be specified with the `run` method:
-
-  * :min-lines - the minumum number of lines in output, default: 0
 
 AUTHOR
 ======

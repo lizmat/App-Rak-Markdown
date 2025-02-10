@@ -1,6 +1,11 @@
 Revision history for App::Rak::Markdown
 
 {{$NEXT}}
+    - Add tableizer for frequencies and unique
+    - Change positional args to named args in .markdown
+      and .run, except the first mandatory positional
+      argument
+    - Left align name in --unicode handling
 
 0.0.1  2025-02-09T22:41:38+01:00
     - Initial version
