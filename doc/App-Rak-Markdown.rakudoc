@@ -132,6 +132,7 @@ These named arguments can be specified with the C<run> method:
 =item :@out - where to store output of rak, default: don't bother
 =item :@err - where to store error output of rak, default: don't bother
 =item :min-lines - the minumum number of lines in output, default: 0
+=item :sort(Callable?) - sort the rak output before calling .markdown
 
 Note that the C<:@out> named argument only makes sense if the
 C<:min-lines> argument also has been specified with a value greater

@@ -1,7 +1,10 @@
 Revision history for App::Rak::Markdown
 
 {{$NEXT}}
+
+0.0.2  2025-02-10T12:38:11+01:00
     - Add tableizer for frequencies and unique
+    - Add :sort option to .run
     - Change positional args to named args in .markdown
       and .run, except the first mandatory positional
       argument

@@ -45,7 +45,7 @@ my multi sub frequencies($_) { .split(":", 2)         }
 my multi sub unique()   { <value>, <left> }
 my multi sub unique($_) { ($_,)           }
 
-class App::Rak::Markdown:ver<0.0.1>:auth<zef:lizmat> {
+class App::Rak::Markdown:ver<0.0.2>:auth<zef:lizmat> {
     has str $.break = "***";
 
     method run(App::Rak::Markdown:D:

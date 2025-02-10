@@ -129,6 +129,8 @@ These named arguments can be specified with the `run` method:
 
   * :min-lines - the minumum number of lines in output, default: 0
 
+  * :sort(Callable?) - sort the rak output before calling .markdown
+
 Note that the `:@out` named argument only makes sense if the `:min-lines` argument also has been specified with a value greater than 0.
 
 All other named arguments that `markdown` can receive, can also be specified here and will be passed on to the `markdown` method:
