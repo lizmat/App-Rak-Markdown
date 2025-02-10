@@ -33,8 +33,15 @@ my sub tableizer($tableizer) {
 # Tableizer for --unicode
 my multi sub unicode() { <hex name graph>, <left left center> }
 my multi sub unicode($_) {
-    my str @words = .words;
-    (@words.head, @words[1..*-2].join(" "), @words.tail)
+    my str $last = .substr(*-1);
+    if $last.ord == 32 && $last ne " " {
+        my str @words = .chop.trim.words;
+        (@words.head, @words.skip, $last)
+    }
+    else {
+        my str @words = .words;
+        (@words.head, @words[1..*-2].join(" "), @words.tail)
+    }
 }
 
 # Tableizer for --frequencies
@@ -45,7 +52,7 @@ my multi sub frequencies($_) { .split(":", 2)         }
 my multi sub unique()   { <value>, <left> }
 my multi sub unique($_) { ($_,)           }
 
-class App::Rak::Markdown:ver<0.0.2>:auth<zef:lizmat> {
+class App::Rak::Markdown:ver<0.0.3>:auth<zef:lizmat> {
     has str $.break = "***";
 
     method run(App::Rak::Markdown:D:
