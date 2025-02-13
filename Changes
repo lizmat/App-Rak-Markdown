@@ -2,6 +2,10 @@ Revision history for App::Rak::Markdown
 
 {{$NEXT}}
 
+0.0.4  2025-02-13T19:15:36+01:00
+    - Add support for :splitter named argument to .run
+      and .markdown
+
 0.0.3  2025-02-10T22:49:54+01:00
     - Fix unicode tableizer for combining codepoints
 

@@ -57,6 +57,7 @@ my $markdown = $rmd.markdown(
   :headers(0),  # how many levels of headers, default: 1
   :depth<##>,   # markdown string of top headers, default: "###"
   :&tableizer,  # logic to create tables, default: none
+  :&splitter,   # headers split logic, default: *.split("/",$headers)
 )
 ```
 
@@ -77,6 +78,8 @@ It also takes the following optional named arguments:
   * :depth - the markdown string for the top header, default "###"
 
   * :tableizer - logic to create tables, default: none.
+
+  * :splitter - headers split logic, default: *.split("/",$headers)
 
 ### Creating tables
 
@@ -146,6 +149,8 @@ All other named arguments that `markdown` can receive, can also be specified her
   * :depth - the markdown string for the top header, default "###"
 
   * :tableizer - logic to create tables, default: none.
+
+  * :splitter - headers split logic, default: *.split("/",$headers)
 
 AUTHOR
 ======

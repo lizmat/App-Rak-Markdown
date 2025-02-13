@@ -61,6 +61,7 @@ my $markdown = $rmd.markdown(
   :headers(0),  # how many levels of headers, default: 1
   :depth<##>,   # markdown string of top headers, default: "###"
   :&tableizer,  # logic to create tables, default: none
+  :&splitter,   # headers split logic, default: *.split("/",$headers)
 )
 
 =end code
@@ -78,6 +79,7 @@ It also takes the following optional named arguments:
 =item :headers - the number of header levels, defaults to 1
 =item :depth - the markdown string for the top header, default "###"
 =item :tableizer - logic to create tables, default: none.
+=item :splitter - headers split logic, default: *.split("/",$headers)
 
 =head3 Creating tables
 
@@ -146,6 +148,7 @@ specified here and will be passed on to the C<markdown> method:
 =item :headers - the number of header levels, defaults to 1
 =item :depth - the markdown string for the top header, default "###"
 =item :tableizer - logic to create tables, default: none.
+=item :splitter - headers split logic, default: *.split("/",$headers)
 
 =head1 AUTHOR
 

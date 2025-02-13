@@ -52,7 +52,7 @@ my multi sub frequencies($_) { .split(":", 2)         }
 my multi sub unique()   { <value>, <left> }
 my multi sub unique($_) { ($_,)           }
 
-class App::Rak::Markdown:ver<0.0.3>:auth<zef:lizmat> {
+class App::Rak::Markdown:ver<0.0.4>:auth<zef:lizmat> {
     has str $.break = "***";
 
     method run(App::Rak::Markdown:D:
@@ -99,6 +99,7 @@ class App::Rak::Markdown:ver<0.0.3>:auth<zef:lizmat> {
       Int :$headers = 1,
       str :$depth   = "###",
           :$tableizer,
+          :&splitter = *.split("/",$headers);
     ) {
         my Str @lines;  # must be Str until 2025.02
         my str $last-header      = "";
@@ -114,7 +115,7 @@ class App::Rak::Markdown:ver<0.0.3>:auth<zef:lizmat> {
 
         for @raw -> $line {
             if $expecting-header {
-                my @parts  = $line.split("/",$expecting-header);
+                my @parts  = splitter($line);
                 my $header = @parts.shift;
                 if $header ne $last-header {
                     ++$heads;
