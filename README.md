@@ -25,6 +25,8 @@ The `App::Rak::Markdown` distribution provides logic to convert the output of [`
 
 This can either be done from captured output, or from a set of arguments to be sent to the `rak` command line script.
 
+Its main use is to create markdown gists of search results, such as for the `rakkable|https://raku.land/zef:lizmat/IRC::Client::Plugin::Rakkable` IRC bot.
+
 METHODS
 =======
 

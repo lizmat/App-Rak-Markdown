@@ -1,7 +1,10 @@
 Revision history for App::Rak::Markdown
 
 {{$NEXT}}
+
+0.0.5  2026-05-28T19:50:21+02:00
     - Add some more documentation
+    - Modernize META
     - Up dependency
     - Update copyright year
 
