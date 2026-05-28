@@ -7,7 +7,6 @@ App::Rak::Markdown - convert App::Rak output to Markdown
 =head1 SYNOPSIS
 
 =begin code :lang<raku>
-
 use App::Rak::Markdown;
 
 my $rmd = App::Rak::Markdown.new;
@@ -15,7 +14,6 @@ my $rmd = App::Rak::Markdown.new;
 spurt "result.md", $rmd.markdown(@output);
 
 spurt "result.md", $rmd.run(<--unicode §love>, :tableize<unicode>);
-
 =end code
 
 =head1 DESCRIPTION
@@ -27,16 +25,18 @@ Markdown format.
 This can either be done from captured output, or from a set of arguments
 to be sent to the C<rak> command line script.
 
+Its main use is to create markdown gists of search results, such as
+for the C<rakkable|https://raku.land/zef:lizmat/IRC::Client::Plugin::Rakkable>
+IRC bot.
+
 =head1 METHODS
 
 =head2 new
 
 =begin code :lang<raku>
-
 my $rmd = App::Rak::Markdown.new(
   break => '§§§',  # default: '***'
 );
-
 =end code
 
 The C<new> method takes 1 named argument:
@@ -50,7 +50,6 @@ C<"***">.
 =head2 markdown
 
 =begin code :lang<raku>
-
 say $rmd.markdown(@output);
 
 my $markdown = $rmd.markdown(
@@ -63,7 +62,6 @@ my $markdown = $rmd.markdown(
   :&tableizer,  # logic to create tables, default: none
   :&splitter,   # headers split logic, default: *.split("/",$headers)
 )
-
 =end code
 
 The C<markdown> method takes one positional argument and an optional
@@ -163,7 +161,7 @@ deal to me!
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2025 Elizabeth Mattijsen
+Copyright 2025, 2026 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 

@@ -5,19 +5,40 @@
   ],
   "build-depends": [
   ],
-  "depends": [
-    "App::Rak:ver<0.3.17+>:auth<zef:lizmat>"
-  ],
+  "depends": {
+    "build": {
+      "requires": [
+        [
+        ]
+      ]
+    },
+    "runtime": {
+      "requires": [
+        "App::Rak:ver<0.3.20+>:auth<zef:lizmat>"
+      ]
+    },
+    "test": {
+      "requires": [
+        [
+        ]
+      ]
+    }
+  },
   "description": "Convert App::Rak output to Markdown",
   "license": "Artistic-2.0",
   "name": "App::Rak::Markdown",
-  "perl": "6.d",
   "provides": {
     "App::Rak::Markdown": "lib/App/Rak/Markdown.rakumod"
   },
+  "raku": "6.d",
   "resources": [
   ],
   "source-url": "https://github.com/lizmat/App-Rak-Markdown.git",
+  "support": {
+    "bugtracker": "https://github.com/lizmat/App-Rak-Markdown/issues",
+    "email": "liz@raku.rocks",
+    "source": "https://github.com/lizmat/App-Rak-Markdown.git"
+  },
   "tags": [
     "RAK",
     "MARKDOWN",

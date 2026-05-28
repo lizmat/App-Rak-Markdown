@@ -1,6 +1,9 @@
 Revision history for App::Rak::Markdown
 
 {{$NEXT}}
+    - Add some more documentation
+    - Up dependency
+    - Update copyright year
 
 0.0.4  2025-02-13T19:15:36+01:00
     - Add support for :splitter named argument to .run
